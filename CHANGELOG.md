@@ -1,32 +1,34 @@
-# Описание обновлений
+# Release Notes
 
-- **Расшифровка**:
-  - 2401.14.0-beta - 14 января 2024 года, не для продакшена;
-  - 2401.14-rc1 - 14 января 2024 года, релиз кандидат, не для продакшена, версия 1, кодировка будет либо дополняться 2, 3. 4, ... либо релиз;
-  - 2401.14 - 14 января 2024 года, продакшен версия, протестирован и готов к работе.
+## Versions Overview
+
+- **Versioning Details**:
+  - **2401.14.0-beta** - January 14, 2024: Not for production use.
+  - **2401.14-rc1** - January 14, 2024: Release candidate, not for production use. Versions will be encoded as 2, 3, 4, etc., or transitioned to the final release.
+  - **2401.14** - January 14, 2024: Production version, tested and ready for deployment.
 
 ## 2402.6.0
 
-- Полность переписана клиент-серверная часть, теперь клиент реализован на Node.js
-- Переработана разрегистрация классов, теперь это более питонячяя реализация на глубоком уровне
+- Completely rewritten client-server architecture, with the client now implemented in Node.js.
+- Overhauled class deregistration, now featuring a more Pythonic implementation at a deep level.
 
 ## 2401.23.1
 
-- Дополнено описание
-- Исправлены баги
-- Переработана разрегистрация классов
+- Updated documentation.
+- Bug fixes.
+- Revised class deregistration.
 
 ## 23012.28-beta
 
-Первичная версия для тестирования среди узкого круга коллег
+- Initial version for testing among a select group of colleagues.
 
-### 24XX.X-Coming_Soon
+## 24XX.X-Coming_Soon
 
-- Документация, шаблоны, багфиксы;
-- Установка аддона, при необходимости, для постоянной работы;
-- Удалить старый путь из sys.path при перезапуске;
-- Удалять обычные python классы, которые может создавать пользователь;
-- Добавить команды разрегистрации аддона, без переустановки;
-- Гифки и анимации с примерами работы.
+- Documentation, templates, and bug fixes.
+- Addon installation for consistent operation.
+- Remove old paths from `sys.path` upon restart.
+- Remove standard Python classes that may be created by the user.
+- Add commands for addon deregistration without reinstallation.
+- GIFs and animations demonstrating functionality.
 
 ---
