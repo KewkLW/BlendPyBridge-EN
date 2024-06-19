@@ -1,7 +1,7 @@
 {
   "name": "blendpybridge",
   "displayName": "BlendPyBridge",
-  "description": "Удобная разработака скриптов и аддонов для Blender с помощью VS Code.",
+"description": "Convenient development of scripts and add-ons for Blender using VS Code."
   "author": {
     "name": "Andrei Zhitkov - Baasis - Andy"
   },
