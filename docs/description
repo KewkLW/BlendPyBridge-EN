@@ -1,34 +1,21 @@
-
 TerminalTextColer.py
-Небольшой файлик, использую для форматирования текст вывода в терминал
+A small file used for formatting terminal output text.
 
 _blSteamPy.bat
-Попытки научиться запускать Blender из Steam со скриптом socket сервера
-с удержанием терминала работающей программы.
-
-
-
+Attempts to learn how to run Blender from Steam with a socket server script while keeping the program's terminal active.
 
 socketBlenderBridge.py
-Это сокет сервер постоянно работающий в Blender при старте Blender командой в VS Code.
-Этот скрипт в какой-то степени самостоятельный и является приниающей сторой с последующим запуском полученного кода.
-То, что передаётся, как интерпретируется и симулируется зависит от остальных модулей.
-
+This is the socket server that continuously runs in Blender when started by a command in VS Code. This script is somewhat autonomous and acts as the receiving end, subsequently executing the received code. How it interprets and simulates what is transmitted depends on other modules.
 
 socketSendCommand.py
-Сокет клиент для отправки отредактированного blExec.py на сервер socketBlenderBridge.py в Blender
-Файл запускаемый python-ом в VS Code при выполнении runCurrScript или runEntirePackage
-python socketSendCommand.py путь_скрипта_проекта путь_скрипта_воркспейса
-
+Socket client for sending the edited blExec.py to the socketBlenderBridge.py server in Blender. This file is executed by Python in VS Code when running runCurrScript or runEntirePackage.
+python socketSendCommand.py project_script_path workspace_script_path
 
 blExec.py
-Скрипт, который передаётся в Blender с помощью socketSendCommand.py и запускается блендером.
-В этот скрипт передаются пути к проекту, проверяется скрипт это или пакет,
-Редактируются глобальные переменные поекта, чтобы симулировать установку.
+Script that is sent to Blender using socketSendCommand.py and executed by Blender. This script receives the project paths, checks if it is a script or package, and edits the project's global variables to simulate installation.
 
 utils_reg.py
-Файл утилит для рагистрации.
-Пока там одна функция для разрешистрации классов по имени пакета
+Utility file for registration. Currently, it has one function for deregistering classes by package name.
 
 thinking
-Файл с размышлениями
+A file with thoughts.
