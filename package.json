@@ -1,14 +1,14 @@
 {
   "name": "blendpybridge",
   "displayName": "BlendPyBridge",
-"description": "Convenient development of scripts and add-ons for Blender using VS Code."
+  "description": "Convenient development of scripts and add-ons for Blender using VS Code.",
   "author": {
     "name": "Andrei Zhitkov - Baasis - Andy"
   },
   "publisher": "BaasiS",
   "version": "2402.6.0",
   "engines": {
-    "vscode": "^1.84.0"
+    "vscode": "^1.90.0"
   },
   "categories": [
     "Debuggers",
@@ -73,7 +73,7 @@
         "key": "Shift+F8",
         "when": "editorTextFocus"
       },
-			{
+      {
         "command": "blendpybridge.runCurrScript",
         "key": "Shift+F9",
         "when": "editorTextFocus"
@@ -91,7 +91,7 @@
   "devDependencies": {
     "@types/mocha": "^10.0.3",
     "@types/node": "18.x",
-    "@types/vscode": "^1.84.0",
+    "@types/vscode": "^1.90.0",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
     "@vscode/test-electron": "^2.3.6",
