@@ -1,5 +1,5 @@
 {
-    "command.startBlender.title": "Start Blender with socket server ",
+    "command.startBlender.title": "Start Blender with socket server",
     "command.pathExecSel.title": "Select Blender Executable",
     "command.pathExecClean.title": "Clean Path Blender",
     "command.pathExecShow.title": "Print path Blender",
