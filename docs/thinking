@@ -1,31 +1,27 @@
-
-Через yo code устанавливаем шаблон расширения для заполнения
+Install the extension template using yo code
 npm install -g yo generator-code
 yo code
 
-Чтобы затестить расширение через меню расширений, его нужно полноценно установить
+To test the extension through the extensions menu, it needs to be fully installed.
 
-Blender расположение
+Blender location
 d:\LIB_DATA\STEAM\steamapps\common\Blender\blender.exe
 
-Запуск Blender с нужным скриптом
+Running Blender with the required script
 ./blender --python script_server.py
 
-Запуск через ярлык
+Launching via shortcut
 "C:\Program Files (x86)\Steam\steam.exe" -applaunch 365670
 
-Запуск в PowerShell
+Running in PowerShell
 & "C:\Program Files (x86)\Steam\steam.exe" -applaunch 365670
-Запуск не удерживает программу в терминале
+This launch does not keep the program running in the terminal.
 
+The bat file option does not work, the script terminates and does not keep track of the program in the terminal.
 
-Вариант с bat не работает, скрипт завершается и не отслеживает программу в терминале
-
-
-При старте с --python стартует сначала скрипт, а потом Blender
-Из-за этого нет контекста для
+When starting with --python, the script starts first, then Blender.
+Because of this, there is no context for
 bpy.app.handlers
-А save_pre раньше я юзал при запуске скрипта прямо в Blender
+And save_pre, which I previously used when running the script directly in Blender.
 
-
-Посмотри полную версию кода, ничего ли я не напутал и не забыл ли я про какие-то нюансы?
+Check the full version of the code to see if I missed any details or nuances?
