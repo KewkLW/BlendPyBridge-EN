@@ -1,19 +1,16 @@
+A crash in VS Code will also kill the running Blender instance.
+Blender runs in the integrated terminal in VS Code.
 
-Вылет VS Code убьет и запущенный Blender
-Blender на интегрированном терминале в VS Code
+Double launching Blender will block and notify the user.
 
-Двойной запуск Blender заблокирует и уведомит пользователя
+Outdated configs might prevent me from finding the Python interpreter in the config folders.
 
+Adding a new project to the current workspace will cause VS Code to detach the Blender terminal from the current session.
 
-Устаревшие конфиги могут не позволить мне найти Python интерпретатор в папки конфигов
+No Need :)
+You need to work in the development project directory, not in any directory.
 
-При добавлении нового проекта в текущее рабочее пространстве
-VS Code отрывает терминал Blender от текущей сессии.
-
-Нет НиНада :)
-Работать нужно в каталоге с проектами для разработки, а не в любом каталоге.
-
-Обрабатываются:
- - скрипт обычный
- - скрипт с register, без __name__ == "__main__"
- - многофайловыйы аддон
+Handled:
+ - regular script
+ - script with register, without __name__ == "__main__"
+ - multi-file add-on
