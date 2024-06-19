@@ -5,37 +5,35 @@ import * as vscode from 'vscode';
 
 
 
-
-// Функция для получения путей pathCurrPyFile, pathWorkspace, pathInitFile у проекта
+// Function to get paths: pathCurrPyFile, pathWorkspace, pathInitFile of the project
 async function getPathsProject() {
-    // Получаем объект активного текстового редактора, открытый в данный момент
+    // Get the active text editor object, currently open
     const activeEditor = vscode.window.activeTextEditor;
 
-    // Путь активного воркспейса, текуего открытого файла
+    // Path of the active workspace, currently open file
     let pathWorkspace;
     if (activeEditor) {
         const workspaceFolder = vscode.workspace.getWorkspaceFolder(activeEditor.document.uri);
         pathWorkspace = workspaceFolder ? workspaceFolder.uri.fsPath : undefined;
     }
 
-    // Если есть активный текстовый редактор и он определяется как python файл, тогда выводим его путь
-    // let pathCurrPyFile = activeEditor && activeEditor.document.languageId === 'python' ? activeEditor.document.uri.fsPath : undefined;
+    // If there is an active text editor and it is identified as a python file, then output its path
     let pathCurrPyFile;
     if (activeEditor && activeEditor.document.languageId === 'python') {
-        // Если активный редактор открыт и в нем Python-файл
+        // If the active editor is open and contains a Python file
         pathCurrPyFile = activeEditor.document.uri.fsPath;
     } else {
-        // Если активный редактор не открыт или в нем не Python-файл
+        // If the active editor is not open or does not contain a Python file
         pathCurrPyFile = undefined;
     }
 
     let pathInitFile;
     if (pathWorkspace) {
-        // Кроссплатформенное формирование пути к файлу __init__.py
+        // Cross-platform formation of the path to the __init__.py file
         const initFilePath = path.join(pathWorkspace, '__init__.py');
         const initFileUri = vscode.Uri.file(initFilePath);
 
-        // Проверка существования файла
+        // Check if the file exists
         try {
             await vscode.workspace.fs.stat(initFileUri);
             pathInitFile = initFileUri.fsPath;
@@ -50,11 +48,11 @@ async function getPathsProject() {
 
 
 
-// Клиент сетевого сокета для откправки путей в Blender
-// Async ненужен т.к. функции connect и wrtite уже асинхронные
+// Network socket client for sending paths to Blender
+// Async is not needed since connect and write functions are already asynchronous
 function sendCommandToBlender(pathWorkspace: string, pathPyFile: string) {
     const client = new net.Socket();
-    // Указываем порт, на котором слушает ваш Python сервер
+    // Specify the port on which your Python server is listening
     const port = 3264;
     const host = 'localhost';
 
@@ -63,14 +61,14 @@ function sendCommandToBlender(pathWorkspace: string, pathPyFile: string) {
         const command = `${pathWorkspace}\n${pathPyFile}`;
         client.write(command, 'utf-8', () => {
             console.log('Command sent to Blender');
-            // Закрываем соединение после отправки
+            // Close the connection after sending
             client.end();
         });
     });
 
     client.on('error', (err) => {
         console.error('Connection error:', err);
-        vscode.window.showErrorMessage('Ошибка подключения к Blender');
+        vscode.window.showErrorMessage('Connection error to Blender');
     });
 
     client.on('close', () => {
@@ -81,27 +79,27 @@ function sendCommandToBlender(pathWorkspace: string, pathPyFile: string) {
 
 
 
-// activate срабатывает при активации расширения
+// activate triggers when the extension is activated
 export function activate(context: vscode.ExtensionContext) {
 
-    // Имя терминала
+    // Terminal name
     const terminalName = "BlendPyBridge";
-    // Ссылка на созданный терминал
+    // Reference to the created terminal
     let terminal: vscode.Terminal | undefined;
 
-    // Регистрация команды 'blendpybridge.start' в контексте расширения, оперделённую в package.json
+    // Registering the 'blendpybridge.start' command in the extension context, defined in package.json
     let disposableStart = vscode.commands.registerCommand('blendpybridge.startBlender', async () => {
 
-        // Проверка запущен ли в данный момент терминал чтобы заблокировать старт дубля
+        // Check if the terminal is currently running to block duplicate starts
         if (terminal) {
-            vscode.window.showWarningMessage('Экземпляр уже работает');
+            vscode.window.showWarningMessage('An instance is already running');
             return;
         }
         
-        // Использование сохраненного пути к Blender
+        // Using the saved path to Blender
         const pathExecBlender = context.globalState.get<string>('pathExecBlender');
         if (!pathExecBlender) {
-            vscode.window.showErrorMessage('Необходимо указать путь к Blender');
+            vscode.window.showErrorMessage('You need to specify the path to Blender');
             return;
         }
 
@@ -111,12 +109,12 @@ export function activate(context: vscode.ExtensionContext) {
         const scriptServerSocket = path.join(context.extensionPath, 'scripts', 'socketBlenderBridge.py');
 
         console.log('%cBlender executable:', 'color: yellow');
-        // Получение последнего компонента пути и его покраска
+        // Get the last component of the path and color it
         pathEnd = path.basename(pathExecBlender);
         pathBegin = pathExecBlender.slice(0, pathExecBlender.lastIndexOf(pathEnd));
         console.log(`%c${pathBegin}%c${pathEnd}`, 'color: normal', 'color: orange');
 
-        console.log('%cСерверный скрипт:', 'color: yellow');
+        console.log('%cServer script:', 'color: yellow');
         pathEnd = path.basename(scriptServerSocket);
         pathBegin = scriptServerSocket.slice(0, scriptServerSocket.lastIndexOf(pathEnd));
         console.log(`%c${pathBegin}%c${pathEnd}`, 'color: normal', 'color: orange');
@@ -126,7 +124,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         // [HKEY_LOCAL_MACHINE\Software\Microsoft\Command Processor\Autorun]
         // New String -> Autorun -> @chcp 65001>nul
-        // Создание терминала и запуск Blender с Socket сервером
+        // Create a terminal and start Blender with the Socket server
         terminal = vscode.window.createTerminal({
             name: terminalName,
             shellPath: pathExecBlender,
@@ -134,10 +132,10 @@ export function activate(context: vscode.ExtensionContext) {
         });
         
 
-        // Отображение окна терминала, если он был скрыт и переключение на нужный
+        // Show the terminal window if it was hidden and switch to it
         terminal.show();
 
-        // Обоработчик жизненного цикла терминала
+        // Terminal lifecycle handler
         const onDidCloseTerminal = vscode.window.onDidCloseTerminal(closedTerminal => {
             if (closedTerminal === terminal) {
                 terminal = undefined;
@@ -152,11 +150,11 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 
-    // Обработчик команды для запуска текущего скрипта
+    // Command handler to run the current script
     let disposableRunCurrScript = vscode.commands.registerCommand('blendpybridge.runCurrScript', async () => {
-        // Проверяем, запущен ли в данный момент терминал с Blender
+        // Check if the Blender terminal is currently running
         if (!terminal) {
-            vscode.window.showErrorMessage('Blender не запущен, некуда отправлять.');
+            vscode.window.showErrorMessage('Blender is not running, nowhere to send.');
             return;
         }
 
@@ -166,17 +164,16 @@ export function activate(context: vscode.ExtensionContext) {
         if (typeof pathCurrPyFile === 'string' && typeof pathWorkspace === 'string') {
             sendCommandToBlender(pathWorkspace, pathCurrPyFile);
         } else {
-            // Обработка случая, когда один из путей не определен
-            // vscode.window.showErrorMessage('Не удалось получить путь к файлу скрипта или рабочей области. Возможно выбран не *.py файл', 'OK');
-            vscode.window.showErrorMessage('Выбран не *.py файл');
+            // Handling the case where one of the paths is not defined
+            vscode.window.showErrorMessage('The selected file is not *.py');
         }
     });
 
-    // Обработчик команды для запуска всего пакета
+    // Command handler to run the entire package
     let disposableRunEntirePackage = vscode.commands.registerCommand('blendpybridge.runEntirePackage', async () => {
-        // Проверяем, запущен ли в данный момент терминал с Blender
+        // Check if the Blender terminal is currently running
         if (!terminal) {
-            vscode.window.showErrorMessage('Blender не запущен, некуда отправлять.');
+            vscode.window.showErrorMessage('Blender is not running, nowhere to send.');
             return;
         }
 
@@ -186,9 +183,8 @@ export function activate(context: vscode.ExtensionContext) {
         if (typeof pathInitFile === 'string' && typeof pathWorkspace === 'string') {
             sendCommandToBlender(pathWorkspace, pathInitFile);
         } else {
-            // Обработка случая, когда один из путей не определен
-            // vscode.window.showErrorMessage('Не удалось получить путь к __init__ файлу или рабочей области');
-            vscode.window.showErrorMessage('Файл __init__ отсутствует к корне проекта');
+            // Handling the case where one of the paths is not defined
+            vscode.window.showErrorMessage('The __init__ file is missing in the root of the project');
         }
     });
 
@@ -197,12 +193,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 
-    // Выбор пути к blender
+    // Selecting the path to Blender
     let disposablePathExecSel = vscode.commands.registerCommand('blendpybridge.pathExecSel', async () => {
 
-        // Проверяем, запущен ли в данный момент терминал
+        // Check if the terminal is currently running
         if (terminal) {
-            vscode.window.showWarningMessage('Нельзя изменять путь к Blender, пока он запущен');
+            vscode.window.showWarningMessage('Cannot change the path to Blender while it is running');
             return;
         }
 
@@ -211,13 +207,13 @@ export function activate(context: vscode.ExtensionContext) {
 
         let filters;
         if (platform === "win32") {
-            // Для Windows показываем только .exe и все файлы
+            // For Windows, show only .exe and all files
             filters = {
                 'Executable Files': ['exe'],
                 'All Files': ['*']
             };
         } else {
-            // Для Linux (и других систем, не являющихся Windows) показываем все файлы
+            // For Linux (and other non-Windows systems), show all files
             filters = {
                 'All Files': ['*'],
                 'Executable Files': ['sh'],
@@ -231,53 +227,53 @@ export function activate(context: vscode.ExtensionContext) {
         };
 
 
-        // Отображение диалогового окна и ожидание выбора файла пользователем
+        // Display the dialog and wait for the user to select a file
         const fileUri = await vscode.window.showOpenDialog(options);
         if (fileUri && fileUri[0]) {
-            // Если файл выбран, получаем его путь
+            // If a file is selected, get its path
             let pathExecBlender = fileUri[0].fsPath;
-            // console.log(`Выбранный путь: ${pathExecBlender}`);
 
-            // Получаем имя файла из полного пути
+            // Get the file name from the full path
             const fileName = path.basename(pathExecBlender);
-            // console.log(`Имя выбранного файла: ${fileName}`);
 
-            // Проверяем, начинается ли имя файла с 'blender' или 'blender.exe' для различных ОС
+            // Check if the file name starts with 'blender' or 'blender.exe' for different OS
             if ((platform === "win32" && fileName === "blender.exe") || (platform !== "win32" && fileName.startsWith("blender"))) {
-                // Прерываем асинхронность и запсиываем переменную в глобальное пространство VS Code
+                // Break async and save the variable in the global space of VS Code
                 await context.globalState.update('pathExecBlender', pathExecBlender);
                 vscode.window.showInformationMessage(`Blender path selected:\n${pathExecBlender}`);
             } else {
-                vscode.window.showErrorMessage(`Выбранный файл не соответствует ожидаемому имени. Ожидается "blender" для Unix или "blender.exe" для Windows.`);
+                vscode.window.showErrorMessage(`The selected file does not match the expected name. Expected "blender" for Unix or "blender.exe" for Windows.`);
             }
 
         } else {
-            // Если файл не был выбран, показываем предупреждающее сообщение
-            vscode.window.showWarningMessage('Исполняемый файл Blender не выбран');
+            // If no file was selected, show a warning message
+            vscode.window.showWarningMessage('Blender executable not selected');
         }
     });
 
-    // Добавление команд в подписки контекста расширения, для очистки после отключения расширения
+    // Add commands to the extension context subscriptions for cleanup after the extension is disabled
     context.subscriptions.push(disposablePathExecSel);
 
 
-    // Зачистка глобальных переменных
-    let disposablePathExecClean = vscode.commands.registerCommand('blendpybridge.pathExecClean', async () => {
+    // Cleanup global variables
+    let disposablePath
 
-        // Проверяем, запущен ли в данный момент терминал
+ExecClean = vscode.commands.registerCommand('blendpybridge.pathExecClean', async () => {
+
+        // Check if the terminal is currently running
         if (terminal) {
-            vscode.window.showWarningMessage('Нельзя очистить пути, пока Blender запущен');
+            vscode.window.showWarningMessage('Cannot clean paths while Blender is running');
             return;
         }
 
-        // Здесь список ключей, которые вы хотите удалить
+        // List of keys you want to delete
         const keysToDelete = ['blenderPaths', 'pathBlenderExe', 'pathExecBlender', 'pathExecPython'];
 
         keysToDelete.forEach(async (key) => {
             await context.globalState.update(key, undefined);
         });
 
-        vscode.window.showInformationMessage('Путь к Blender из глобальных переменных был удален');
+        vscode.window.showInformationMessage('The path to Blender has been removed from global variables');
     });
 
     context.subscriptions.push(disposablePathExecClean);
@@ -286,15 +282,15 @@ export function activate(context: vscode.ExtensionContext) {
 
 
     // ######## ######## ######## ######## DEBUG ZONE ######## ######## ######## ########
-    // Вывод в\о всплывающие окошки путей к Blender и к Python
+    // Display paths to Blender and Python in pop-up windows
     let disposablePathExecShow = vscode.commands.registerCommand('blendpybridge.pathExecShow', async () => {
-        // Получение путей из глобального пространства переменных из VS Code
+        // Get paths from the global variable space of VS Code
         const pathExecBlender = context.globalState.get<string>('pathExecBlender');
 
         if (pathExecBlender) {
-            vscode.window.showInformationMessage(`Текущий путь Blender: ${pathExecBlender}`, 'OK');
+            vscode.window.showInformationMessage(`Current Blender path: ${pathExecBlender}`, 'OK');
         } else {
-            vscode.window.showWarningMessage(`Текущий путь Blender не определен`);
+            vscode.window.showWarningMessage(`Current Blender path is not defined`);
         }
     });
 
@@ -302,28 +298,28 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 
-    // Вывод всех путей для формирования команд
+    // Display all paths to form commands
     let disposableShowPathsProject = vscode.commands.registerCommand('blendpybridge.showPathsProject', async () => {
-        // Получаем пути проекта
+        // Get project paths
         const { pathWorkspace, pathCurrPyFile, pathInitFile } = await getPathsProject();
 
-        // Если есть воркспейс
+        // If there is a workspace
         if (pathWorkspace) {
-            vscode.window.showInformationMessage(`Путь к главной папки проекта: ${pathWorkspace}`, 'OK');
+            vscode.window.showInformationMessage(`Path to the main project folder: ${pathWorkspace}`, 'OK');
 
             if (pathCurrPyFile) {
-                vscode.window.showInformationMessage(`Путь к исполняемому Python файлу: ${pathCurrPyFile}`, 'OK');
+                vscode.window.showInformationMessage(`Path to the executable Python file: ${pathCurrPyFile}`, 'OK');
             } else {
-                vscode.window.showWarningMessage('Нет активного Python файла');
+                vscode.window.showWarningMessage('No active Python file');
             }
 
             if (pathInitFile) {
-                vscode.window.showInformationMessage(`В рабочей области есть __init__.py файл - это пакет: ${pathInitFile}`, 'OK');
+                vscode.window.showInformationMessage(`There is an __init__.py file in the workspace - this is a package: ${pathInitFile}`, 'OK');
             } else {
-                vscode.window.showWarningMessage('В рабочей области нет __init__.py файла - проект не является пакетом', 'OK');
+                vscode.window.showWarningMessage('There is no __init__.py file in the workspace - the project is not a package');
             }
         } else {
-            vscode.window.showWarningMessage('Нет рабочей области');
+            vscode.window.showWarningMessage('No workspace');
         }
     });
 
@@ -335,5 +331,5 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 
-// Функция, срабатывающая при деактивации аддона
+// Function triggered when the addon is deactivated
 export function deactivate() {}
