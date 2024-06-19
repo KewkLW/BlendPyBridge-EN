@@ -1,98 +1,96 @@
 # Blender Python Bridge for "VS Code"
 
-## Описание
+## Description
 
-Это расширение создаёт программный мост между Blender и VS Code, позволяя Blender работать в режиме прослушивания и обрабатывать как отдельные команды, так и целые скрипты, пакеты или многофайловые аддоны от клиента, где клиентом выступает VS Code. Обмен данными осуществляется через сетевой сокет, обеспечивая эффективное взаимодействие между Blender (как сервером) и VS Code.
+This extension creates a software bridge between Blender and VS Code, allowing Blender to operate in listening mode and process individual commands, entire scripts, packages, or multi-file add-ons from the client, where the client is VS Code. Data exchange is carried out through a network socket, ensuring efficient interaction between Blender (as a server) and VS Code.
 
-## Особенности
+## Features
 
-- **Прямая передача кода**: Запускайте разрабатываемые скрипты/аддоны напрямую в Blender без необходимости их установки или манипуляции с файлами или архивами.
-- **Поддержка полного проекта**: Работа со скриптами, пакетами и многофайловыми аддонами.
-- **Интеграция с VS Code**: Удобное использование через команды в меню VS Codeгорячие или горячими клавишами.
-- **Поддержка воркспейсов VS Code**: Позволяет работать сразу с несколькими проектами в разным местах диска добавленных в рабочую область.
+- **Direct code transfer**: Run developed scripts/add-ons directly in Blender without the need for installation or file manipulation.
+- **Full project support**: Work with scripts, packages, and multi-file add-ons.
+- **Integration with VS Code**: Convenient use through commands in the VS Code menu or hotkeys.
+- **Support for VS Code workspaces**: Allows working with multiple projects in different locations added to the workspace.
 
-## Установка и настройка расширения в VS Code
+## Installation and setup of the extension in VS Code
 
-- Установите расширение через встроенный MarketPlace;
-- Нажмите `Ctrl+Shift+P`, найтите и запустите команду **"Select Blender Executable"**;
-- Укажите путь к исполняемому файлу Blender;
-- (Опционально) Настройте кодировку терминала для корректного отображения кириллицы (инструкции включены);
-- Откройте свой код в Workspace;
-- Запустите код (как, смотри ниже);
+- Install the extension via the built-in Marketplace;
+- Press `Ctrl+Shift+P`, find and run the **"Select Blender Executable"** command;
+- Specify the path to the Blender executable file;
+- (Optional) Configure the terminal encoding for correct Cyrillic display (instructions included);
+- Open your code in Workspace;
+- Run the code (how, see below);
 
-## Как это устроено в общем
+## General overview
 
-Пользователь создаёт скрипт/пакет/аддон в VS Code, далее запускает код и видит результат в Blender.
+The user creates a script/package/add-on in VS Code, then runs the code and sees the result in Blender.
 
-- `Shift+F7` - Запуск Blender с сетевым скетом для прослушивания команд;
-- `Shift+F8` - Запуск пакета целиком из текущего воркспейса вне зависимости от того какой открыт скрипт и в какой папке, запускается `__init__.py`, эмулируя работу как при полноценной установке аддона;
-- `Shift+F9` - Запуск конкретного, открытого в данный момент скрипта.
+- `Shift+F7` - Start Blender with a network socket for listening to commands;
+- `Shift+F8` - Run the entire package from the current workspace, regardless of which script is open and in which folder, `__init__.py` is run, emulating the work as if the add-on was fully installed;
+- `Shift+F9` - Run the currently open script.
 
-Код передаётся в Blender, и запускается так как если бы вы его запаковали в zip архив и установили через Blender интерфейс. Разница лишь в том, что это всё происходит на лету без фактической установки и работы с файлами на диске. Blender получает пути к проекту и выполняет регистрацию классов из фактического расположения проекта на жестком диске в вашей папке проекта.
+The code is transferred to Blender and runs as if you had packed it into a zip archive and installed it through the Blender interface. The difference is that it all happens on the fly without actual installation and file manipulation on the disk. Blender receives the project paths and performs class registration from the actual project location on your hard drive in your project folder.
 
-При перезапуске кода, все классы и модули сначала разрегистрируются и удаляются из памяти чтобы очистить прошлый результат работы, после старта нового кода не будет пересечений с прошлым результатом работы.
+When the code is restarted, all classes and modules are first unregistered and removed from memory to clear the previous result. After starting the new code, there will be no intersections with the previous work result.
 
-После выключения Blender ваш скрипт/пакет/аддон полностью вычищается из памяти так как он не был установлен, а использовался на лету.
+After turning off Blender, your script/package/add-on is completely cleaned from memory since it was not installed but used on the fly.
 
-Пространство имен поддерживается аналогично структуре Blender, что позволяет упаковать ваше творение в zip и установить на постоянной основе или передать кому либо не боясь проблем с абсолютными и относительными путями в импортах, (поймут те кто сталкивался с работой через IDE).
+The namespace is supported similarly to Blender's structure, allowing you to pack your creation into a zip and install it permanently or pass it on without fear of problems with absolute and relative import paths (those who have worked through IDE will understand).
 
-## Доступные команды
+## Available commands
 
-- `pathExecSel`: Выбрать исполняемый файл Blender  
-- `pathExecClean`: Очистить путь к Blender  
-- `pathExecShow`: Показать путь к Blender  
-- `showPathsProject`: Показать пути проекта  
-- `startBlender`: Запустить Blender с сокет сервером `Shift+F7`  
-- `runEntirePackage`: Запустить весь пакет в Blender `Shift+F8`  
-- `runCurrScript`: Запустить текущий скрипт в Blender `Shift+F9`  
+- `pathExecSel`: Select the Blender executable file  
+- `pathExecClean`: Clear the Blender path  
+- `pathExecShow`: Show the Blender path  
+- `showPathsProject`: Show project paths  
+- `startBlender`: Start Blender with the socket server `Shift+F7`  
+- `runEntirePackage`: Run the entire package in Blender `Shift+F8`  
+- `runCurrScript`: Run the current script in Blender `Shift+F9`  
 
-## Зависимости
+## Dependencies
 
-Прямых зависимостей у расширения нет. Расширение требует указать путь до исполняемого файла Blender.
+The extension has no direct dependencies. The extension requires specifying the path to the Blender executable file.
 
-Будьте уверены в том, что код будет работать, так как использует встроенный в Blender интерпретатор.
+Be sure that the code will work since it uses the built-in Blender interpreter.
 
-Установка Python в VS Code является опциональной и не влияет на работу расширения, а лишь на ваше удобство, подсветку синтаксиса и разработку своих личных проектов не связанных с Blender.
+Installing Python in VS Code is optional and does not affect the extension's operation, only your convenience, syntax highlighting, and developing your personal projects not related to Blender.
 
-## Настройка кодировок в терминале (Опционально)
+## Terminal encoding settings (Optional)
 
-- (для GNU/Linux) кодировка в большей части репозиториев должна быть изначально правильной;
+- (for GNU/Linux) encoding in most repositories should be correct by default;
 
-- (для вендузятников) В Windows, системный терминал использует кодировку 866, что не позволяет отображать кирилицу в терминале, при получении сообщений от Blender в терминал (не от python интерпретатора в терминал. а именно ошибки самой программы). Кирилица на уровне VS Code и в скриптах поддерживается без проблем так как происходит декодирование вывода в UTF-8 расширением.
+- (for Windows users) In Windows, the system terminal uses encoding 866, which does not allow Cyrillic to be displayed in the terminal when receiving messages from Blender to the terminal (not from the python interpreter to the terminal, but exactly the program's errors). Cyrillic in VS Code and scripts is supported without problems since the extension decodes the output into UTF-8.
 
   - **CMD**  
-Чтобы переключить системный "CMD" терминал на UTF-8 на постоянной основе, нужно в реестре перейти в
+To permanently switch the system "CMD" terminal to UTF-8, go to the registry
 `"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Command Processor"`
-Создать там "Строковый параметр" с именем **Autorun** в значении которого ввести
+Create a "String Value" named **Autorun** with the value
 `@chcp 65001>nul`
 
   - **PowerShell**  
-Создайте папку с файлом, если её еще нет по пути
+Create a folder with a file if it does not exist at
 `C:\Users\a_zhitkov\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1`  
-Внутри файла одна строка с конфигом на переключение терминала  
+Inside the file, one line with the config to switch the terminal  
 `[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8`
 
-    Это позволит автоматически выполнять команду смены кодировки перед запуском терминала на уровне системы. Оставляю эту задачу на плечах пользователя так как не хочу вносить системные изменения за пользователя.
+    This will automatically execute the encoding change command before launching the terminal at the system level. I leave this task to the user as I do not want to make system changes on behalf of the user.
 
-## Для разработчиков
+## For developers
 
-### Подготовка среды разработки
+### Setting up the development environment
 
-- Установите `Node.js` в систему
-- Запустите в проекте `npm install`, чтобы установились все зависимости в папку node_modules, если её нет она появится
-- Проверьте работает ли команда `npm run watch`
-- Если всё работает, то проверьте расширение в режиме отладки, нажмите `F5`
+- Install `Node.js` on the system
+- Run `npm install` in the project to install all dependencies into the node_modules folder, if it doesn't exist, it will appear
+- Check if the `npm run watch` command works
+- If everything works, check the extension in debug mode, press `F5`
 
-Должно запуститься новое окно VS Code с запущенным кодом расширения, где можно протестировать логику проекта включая команды.
+A new VS Code window should open with the extension code running, where you can test the project logic, including commands.
 
-### Билд *.vsix расширения для установки в VS Code
+### Build the *.vsix extension for installation in VS Code
 
-- В терминале проекта VS Code, выполните установку утилиты паковки `vsce`  
+- In the VS Code project terminal, install the packaging utility `vsce`  
 `npm install -g @vscode/vsce`
 
-- Запакуйте проект в расширение формата `*.vsix`  
+- Pack the project into an `*.vsix` extension  
 `vsce package`
 
-Получится файл вида `blendpybridge-2401.21.1.vsix` готовый к установке в VS Code или пубикации в маркетплейсе.
-
----
+The result will be a file like `blendpybridge-2401.21.1.vsix` ready for installation in VS Code or publication in the marketplace.
