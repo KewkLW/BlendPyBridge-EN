@@ -1,9 +1,9 @@
 {
-	"command.startBlender.title": "Start Blender with socket server",
-	"command.pathExecSel.title": "Select Blender executable",
-	"command.pathExecClean.title": "Clear Blender path",
-	"command.pathExecShow.title": "Show Blender path",
-	"command.showPathsProject.title": "Show project paths",
-	"command.runCurrScript.title": "Run current script in Blender",
-	"command.runEntirePackage.title": "Run entire package in Blender"
+"command.startBlender.title": "Запустить Blender с сокет сервером",
+"command.pathExecSel.title": "Выбрать исполняемый файл Blender",
+"command.pathExecClean.title": "Очистить путь к Blender",
+"command.pathExecShow.title": "Показать путь к Blender",
+"command.showPathsProject.title": "Показать пути проекта",
+"command.runCurrScript.title": "Запустить текущий скрипт в Blender",
+"command.runEntirePackage.title": "Запустить весь пакет в Blender"
 }
